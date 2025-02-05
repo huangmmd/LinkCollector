@@ -141,6 +141,22 @@
         #cat-image:hover {
             transform: scale(1.2); /* 鼠标悬停时放大 */
         }
+        #cat-text {
+            position: absolute;
+            top: 130px; /* 调整为CAT图片下方 */
+            right: 5px;
+            width: 120px; /* 修改宽度 */
+            height: 20px; /* 修改高度 */
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+        }
         .toggle-switch {
             position: relative;
             display: inline-block;
@@ -187,6 +203,7 @@
 </head>
 <body>
     <img src="icons/CAT.png" alt="CAT" id="cat-image" onclick="refreshAllTabs()">
+    <div id="cat-text">撸猫嘛?</div>
     <h2>喜欢偷偷收集小鱼干的猫咪</h2>
     <div id="link-count">已收集的小鱼干！ <span id="link-count-number">0</span></div>
     <div class="search-container">
