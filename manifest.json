@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "复制链接小助手",
-  "version": "2.0",
+  "version": "2.1", // 修改版本号为 2.1
   "description": "纯AI开发的小工具，用于后台静默提取网页中的磁力链接和ed2k链接。图标等图片收集自互联网，如有侵权可联系作者哦~",
   "author": "黄萌萌可爱多",
   "permissions": ["storage", "activeTab", "tabs"],
