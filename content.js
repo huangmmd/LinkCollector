@@ -2,23 +2,21 @@
 const magnetRegex = /magnet:\?xt=urn:btih:[a-zA-Z0-9]*/gi; // 磁力链接正则表达式
 const ed2kRegex = /ed2k:\/\/[^"]+/gi; // 匹配所有以 ed2k:// 开头的链接
 
-// 创建刷新按钮
-const refreshButton = document.createElement('button');
-refreshButton.textContent = '刷新所有标签页';
-refreshButton.style.position = 'fixed';
-refreshButton.style.bottom = '10px';
-refreshButton.style.right = '10px';
-refreshButton.style.zIndex = '10000';
-document.body.appendChild(refreshButton);
+// const refreshButton = document.createElement('button');
+// refreshButton.textContent = '刷新所有标签页';
+// refreshButton.style.position = 'fixed';
+// refreshButton.style.bottom = '10px';
+// refreshButton.style.right = '10px';
+// refreshButton.style.zIndex = '10000';
+// document.body.appendChild(refreshButton);
 
-// 添加点击事件监听器
-refreshButton.addEventListener('click', () => {
-  chrome.tabs.query({}, (tabs) => {
-    tabs.forEach((tab) => {
-      chrome.tabs.reload(tab.id);
-    });
-  });
-});
+// refreshButton.addEventListener('click', () => {
+//   chrome.tabs.query({}, (tabs) => {
+//     tabs.forEach((tab) => {
+//       chrome.tabs.reload(tab.id);
+//     });
+//   });
+// });
 
 // 检测并发送磁力链接和ed2k链接
 chrome.runtime.sendMessage({ type: "GET_ENABLED" }, (response) => {

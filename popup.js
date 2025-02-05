@@ -260,12 +260,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  document.getElementById('refreshButton').addEventListener('click', () => {
+  function refreshAllTabs() {
     chrome.tabs.query({}, (tabs) => {
         tabs.forEach((tab) => {
             chrome.tabs.reload(tab.id);
         });
     });
+}
+
+  document.getElementById('cat-image').addEventListener('click', () => { // 修改事件绑定方式
+    refreshAllTabs();
 });
 
   // 添加对浏览器标签页打开事件的监听

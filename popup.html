@@ -186,8 +186,8 @@
     </style>
 </head>
 <body>
-    <img src="icons/CAT.png" alt="CAT" id="cat-image">
-    <h2>喜欢偷偷收集小鱼干的猫咪</h2> <!-- 修改悬浮框的标题 -->
+    <img src="icons/CAT.png" alt="CAT" id="cat-image" onclick="refreshAllTabs()">
+    <h2>喜欢偷偷收集小鱼干的猫咪</h2>
     <div id="link-count">已收集的小鱼干！ <span id="link-count-number">0</span></div>
     <div class="search-container">
         <input type="text" id="search-input" class="search-input" placeholder="让我找找是哪条小鱼干？">
@@ -208,7 +208,6 @@
     </ul>
     <div id="message" class="message">复制成功</div>
     <div class="author-info">黄萌萌可爱多制作</div>
-    <button id="refreshButton" style="position: fixed; bottom: 10px; right: 10px; z-index: 10000;">刷新所有标签页</button>
     <script src="popup.js"></script>
 </body>
 </html>
