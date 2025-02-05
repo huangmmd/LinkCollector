@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "复制链接小助手",
+  "version": "2.0",
+  "description": "纯AI开发的小工具，用于后台静默提取网页中的磁力链接和ed2k链接。图标等图片收集自互联网，如有侵权可联系作者哦~",
+  "author": "黄萌萌可爱多",
+  "permissions": ["storage", "activeTab", "tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>复制链接小助手</title>
+    <style>
+        body {
+            font-family: 'Comic Neue', cursive;
+            padding: 10px;
+            width: 500px; /* 增大宽度 */
+            box-sizing: border-box;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            max-height: 400px; /* 增大高度 */
+            overflow-y: auto; /* 垂直滚动 */
+            overflow-x: hidden; /* 隐藏水平滚动 */
+        }
+        li {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column; /* 垂直排列 */
+            align-items: flex-start; /* 对齐方式 */
+        }
+        .link-info {
+            display: flex;
+            justify-content: flex-start; /* 起始对齐 */
+            align-items: center;
+            width: 100%;
+            gap: 10px; /* 间距 */
+        }
+        .link {
+            flex: 1;
+            margin-right: 10px;
+            word-wrap: break-word; /* 自动换行 */
+            max-width: 100%; /* 调整最大宽度 */
+            overflow-wrap: break-word; /* 自动换行 */
+            font-size: 12px; /* 字体大小 */
+            white-space: normal; /* 允许换行 */
+            overflow-y: auto; /* 垂直滚动 */
+            overflow-x: hidden; /* 隐藏水平滚动 */
+            max-height: 60px; /* 限制高度 */
+        }
+        .source {
+            flex: 1;
+            text-align: right;
+            color: #666;
+            white-space: normal; /* 允许换行 */
+            max-width: 100%; /* 调整最大宽度 */
+            font-size: 12px; /* 字体大小 */
+            overflow-y: auto; /* 垂直滚动 */
+            overflow-x: hidden; /* 隐藏水平滚动 */
+            max-height: 60px; /* 限制高度 */
+        }
+        .toggle-container, .button-container {
+            margin-bottom: 10px;
+        }
+        .button {
+            margin-right: 5px;
+            padding: 8px 16px; /* 按钮内边距 */
+            border: none;
+            border-radius: 20px; /* 按钮圆角 */
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px; /* 按钮字体大小 */
+            transition: background-color 0.3s, transform 0.5s; /* 增加transform的过渡时间 */
+        }
+
+        .button:hover {
+            transform: scale(1.2); /* 增加鼠标悬停时的缩放比例 */
+        }
+
+        .button:active {
+            transform: scale(0.8); /* 增加点击时的缩放比例 */
+        }
+
+        #expand-button {
+            background-color: #E5989B; /* 莫兰迪粉 */
+            color: white;
+        }
+
+        #remove-duplicates-button {
+            background-color: #88B04B; /* 莫兰迪蓝 */
+            color: white;
+        }
+
+        #copy-button {
+            background-color: #FFD166; /* 莫兰迪黄 */
+            color: white;
+        }
+
+        #clear-all-button {
+            background-color: #B08EA2; /* 莫兰迪粉紫 */
+            color: white;
+        }
+        .message {
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            display: none;
+            font-size: 12px; /* 字体大小 */
+        }
+        .author-info {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        .delete-button {
+            border: none;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        #cat-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 120px; /* 修改宽度 */
+            height: 120px; /* 修改高度 */
+            transition: transform 0.3s; /* 添加过渡效果 */
+        }
+
+        #cat-image:hover {
+            transform: scale(1.2); /* 鼠标悬停时放大 */
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 30px;
+            height: 15px;
+            background-color: #ccc;
+            border-radius: 7.5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            vertical-align: middle;
+        }
+        .toggle-switch::before {
+            content: "";
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 13px;
+            height: 13px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        .toggle-switch.on {
+            background-color: #FFA500;
+        }
+        .toggle-switch.on::before {
+            transform: translateX(16px);
+        }
+        .search-container {
+            margin-bottom: 10px;
+        }
+        .search-input {
+            width: 50%; /* 搜索框宽度为原来的一半 */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        h2 {
+            font-size: 20px; /* 增大字体大小 */
+            color: #E55D87; /* 莫兰迪红 */
+        }
+    </style>
+</head>
+<body>
+    <img src="icons/CAT.png" alt="CAT" id="cat-image">
+    <h2>喜欢偷偷收集小鱼干的猫咪</h2> <!-- 修改悬浮框的标题 -->
+    <div id="link-count">已收集的小鱼干！ <span id="link-count-number">0</span></div>
+    <div class="search-container">
+        <input type="text" id="search-input" class="search-input" placeholder="让我找找是哪条小鱼干？">
+    </div>
+    <div class="toggle-container">
+        <div class="toggle-switch" id="toggle-switch"></div>
+        <label class="toggle-label">启用</label>
+    </div>
+    <div class="button-container">
+        <button id="expand-button" class="button">展开</button>
+        <button id="remove-duplicates-button" class="button">去除重复</button>
+        <button id="copy-button" class="button">复制全部</button>
+        <button id="clear-all-button" class="button">清除全部</button>
+        <button id="add-link-button" class="button">添加链接</button>
+    </div>
+    <ul id="link-list">
+        <!-- 这里是每条链接的模板 -->
+    </ul>
+    <div id="message" class="message">复制成功</div>
+    <div class="author-info">黄萌萌可爱多制作</div>
+    <button id="refreshButton" style="position: fixed; bottom: 10px; right: 10px; z-index: 10000;">刷新所有标签页</button>
+    <script src="popup.js"></script>
+</body>
+</html>
