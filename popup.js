@@ -275,19 +275,52 @@ document.addEventListener("DOMContentLoaded", () => {
   // 添加对浏览器标签页打开事件的监听
   chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if (changeInfo.status === 'complete') {
-      // 页面加载完成时执行获取链接的逻辑
-      collectLinks(tabId);
+        // 页面加载完成时执行获取链接的逻辑
+        collectLinks(tabId);
     }
-  });
+});
 
-  // 添加对新标签页创建事件的监听
-  chrome.tabs.onCreated.addListener((tab) => {
+chrome.tabs.onCreated.addListener((tab) => {
     // 新标签页创建时执行获取链接的逻辑
-    collectLinks(tab.id);
-  });
+    chrome.tabs.onUpdated.addListener((newTabId, newChangeInfo, newTab) => {
+        if (newTabId === tab.id && newChangeInfo.status === 'complete') {
+            collectLinks(newTabId);
+        }
+    });
+});
 
-  // 定义收集链接的函数
-  function collectLinks(tabId) {
-    // ... existing code for collecting links ...
-  }
+// 添加 collectLinks 函数
+function collectLinks(tabId) {
+    chrome.tabs.executeScript(tabId, {
+        code: `
+            (function() {
+                const links = Array.from(document.querySelectorAll('a'), a => a.href);
+                return links;
+            })();
+        `
+    }, (results) => {
+        if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError);
+            return;
+        }
+
+        if (results && results.length > 0) {
+            const newLinks = results[0].map((link, index) => ({
+                id: Date.now() + index, // 使用时间戳和索引生成唯一ID
+                link,
+                pageTitle: document.title
+            }));
+
+            chrome.storage.local.get(["links"], (data) => {
+                const existingLinks = data.links || [];
+                const updatedLinks = [...existingLinks, ...newLinks];
+
+                chrome.storage.local.set({ links: updatedLinks }, () => {
+                    // 更新悬浮页中的链接列表
+                    chrome.runtime.sendMessage({ type: "UPDATE_LINKS" });
+                });
+            });
+        }
+    });
+}
 });
