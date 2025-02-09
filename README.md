@@ -1,3 +1,8 @@
+注意：由于这个插件在批量打开10个标签页的时候，有几率漏过一两个标签前的链接无法提取，我想了很多办法页没能很好的解决。于是搞了一个油猴插件版https://github.com/huangmmd/MG-Linkcollector供大家使用，功能差不多，但更直观稳定。
+
+
+
+
 1. 运行主界面~  注意：“复制”按钮是复制所有已经提取到的链接~
 
 ![运行主界面](https://github.com/user-attachments/assets/d78d6d65-f192-41bb-b132-cce2ee9ad69c)
