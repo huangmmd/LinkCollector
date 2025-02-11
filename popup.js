@@ -195,6 +195,36 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    // 添加“监测当前页”按钮
+    const monitorButton = document.createElement("button");
+    monitorButton.id = "monitor-button";
+    monitorButton.textContent = "监测当前页";
+    monitorButton.className = "button";
+    monitorButton.style.marginTop = "10px";
+    monitorButton.style.backgroundColor = "#333";
+    monitorButton.style.color = "white";
+    document.querySelector(".button-container").appendChild(monitorButton);
+
+    // 监测当前页按钮点击事件
+    monitorButton.addEventListener("click", () => {
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs.length > 0) {
+                const currentTab = tabs[0];
+                const currentTitle = currentTab.title;
+
+                chrome.storage.local.get(["links"], (data) => {
+                    const links = data.links || [];
+                    const updatedLinks = links.filter(link => link.pageTitle !== currentTitle);
+
+                    chrome.storage.local.set({ links: updatedLinks }, () => {
+                        displayLinks(updatedLinks.slice().reverse());
+                        linkCountNumber.textContent = updatedLinks.length;
+                    });
+                });
+            }
+        });
+    });
+
     // 搜索功能
     const searchInput = document.getElementById("search-input");
     searchInput.placeholder = "让我找找是哪条小鱼干？"; // 修改占位符文本
