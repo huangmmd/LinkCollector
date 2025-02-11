@@ -324,6 +324,15 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
         if (tab.status === 'complete') {
             // 页面加载完成时执行获取链接的逻辑
             collectLinks(activeInfo.tabId);
+        } else {
+            // 如果页面还未加载完成，监听页面加载完成事件
+            chrome.tabs.onUpdated.addListener(function onUpdatedListener(tabId, changeInfo) {
+                if (tabId === activeInfo.tabId && changeInfo.status === 'complete') {
+                    collectLinks(tabId);
+                    // 移除监听器，避免重复执行
+                    chrome.tabs.onUpdated.removeListener(onUpdatedListener);
+                }
+            });
         }
     });
 });
