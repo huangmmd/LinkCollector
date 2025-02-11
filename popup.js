@@ -318,8 +318,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// 添加对浏览器标签页激活事件的监听
+chrome.tabs.onActivated.addListener((activeInfo) => {
+    chrome.tabs.get(activeInfo.tabId, (tab) => {
+        if (tab.status === 'complete') {
+            // 页面加载完成时执行获取链接的逻辑
+            collectLinks(activeInfo.tabId);
+        }
+    });
+});
+
+// 添加对浏览器标签页创建事件的监听
 chrome.tabs.onCreated.addListener((tab) => {
-    // 新标签页创建时执行获取链接的逻辑
     chrome.tabs.onUpdated.addListener((newTabId, newChangeInfo, newTab) => {
         if (newTabId === tab.id && newChangeInfo.status === 'complete') {
             collectLinks(newTabId);
@@ -332,8 +342,24 @@ function collectLinks(tabId) {
     chrome.tabs.executeScript(tabId, {
         code: `
             (function() {
-                const links = Array.from(document.querySelectorAll('a'), a => a.href);
-                return links;
+                const magnetRegex = /magnet:\\?xt=urn:btih:[a-zA-Z0-9]*/gi; // 磁力链接正则表达式
+                const ed2kRegex = /ed2k:\\/\\/[^"]+/gi; // 匹配所有以 ed2k:// 开头的链接
+
+                const magnetLinks = document.body.innerHTML.match(magnetRegex) || [];
+                const ed2kLinks = document.body.innerHTML.match(ed2kRegex) || [];
+
+                // 清理ed2k链接，移除HTML标签和其他非链接内容
+                const cleanedEd2kLinks = ed2kLinks.map(link => {
+                    return link.replace(/<[^>]+>/g, '').trim();
+                });
+
+                // 合并磁力链接和清理后的ed2k链接，并去重
+                let allLinks = Array.from(new Set([...magnetLinks, ...cleanedEd2kLinks]));
+
+                // 获取当前页面的标题作为备注
+                const pageTitle = document.title;
+
+                return { links: allLinks, pageTitle };
             })();
         `
     }, (results) => {
@@ -343,10 +369,11 @@ function collectLinks(tabId) {
         }
 
         if (results && results.length > 0) {
-            const newLinks = results[0].map((link, index) => ({
+            const { links, pageTitle } = results[0];
+            const newLinks = links.map((link, index) => ({
                 id: Date.now() + index, // 使用时间戳和索引生成唯一ID
                 link,
-                pageTitle: document.title
+                pageTitle
             }));
 
             chrome.storage.local.get(["links"], (data) => {
