@@ -195,10 +195,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // 添加“监测当前页”按钮
+    // 添加“删除当前页链接”按钮
     const monitorButton = document.createElement("button");
     monitorButton.id = "monitor-button";
-    monitorButton.textContent = "监测当前页";
+    monitorButton.textContent = "删除当前页链接";
     monitorButton.className = "button";
     monitorButton.style.marginTop = "10px";
     monitorButton.style.backgroundColor = "#333";
@@ -264,6 +264,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       deleteSelectedButton.style.display = "none"; // 隐藏删除选中按钮
     });
+
+    // 添加键盘事件监听器
+    document.addEventListener("keydown", (event) => {
+        if (event.altKey && event.key === "w") {
+            monitorButton.click(); // 触发“删除当前页链接”按钮的点击事件
+        }
+    });
+
   });
 
   // 监听拨动按钮的点击事件，切换插件状态
